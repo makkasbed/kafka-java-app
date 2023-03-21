@@ -7,6 +7,6 @@ public class Consumer {
 
     public static void main(String [] args)
     {
-
+       log.info("Consumer started");
     }
 }
