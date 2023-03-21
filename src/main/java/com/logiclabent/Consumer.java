@@ -2,6 +2,7 @@ package com.logiclabent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -20,7 +21,26 @@ public class Consumer {
 
         KafkaConsumer<String,String> consumer = new KafkaConsumer<>(properties);
 
-        String topic = "lotr_characters";
-        consumer.subscribe(Arrays.asList(topic));
+        try
+        {
+            String topic = "lotr_characters";
+            consumer.subscribe(Arrays.asList(topic));
+
+            while (true){
+                ConsumerRecords<String,String> messages= consumer.poll(Duration.ofMillis(100));
+                for(ConsumerRecord<String,String> message: messages){
+                    log.info("key ["+message.key()+"] value["+message.value()+"]");
+                    log.info("partition ["+message.partition()+"]");
+                }
+            }
+
+        }catch (Exception err)
+        {
+           log.error("Error ",err);
+        }finally {
+           consumer.close();
+           log.info("The consumer is now closed");
+        }
+
     }
 }
