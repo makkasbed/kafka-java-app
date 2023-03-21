@@ -3,6 +3,8 @@ package com.logiclabent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -24,10 +26,24 @@ public class Producer {
 
         KafkaProducer<String,String> producer = new KafkaProducer<>(properties);
 
-        ProducerRecord<String,String> producerRecord = new ProducerRecord<>("lotr_characters","hobbits","Bilbo");
+        HashMap<String,String> characters = new HashMap<String,String>();
+        characters.put("hobbits","Frodo");
+        characters.put("hobbits","Sam");
 
-        producer.send(producerRecord);
-
+        for(HashMap.Entry<String,String> character: characters.entrySet()){
+            ProducerRecord<String,String> producerRecord = new ProducerRecord<>("lotr_characters",character.getKey());
+            producer.send(producerRecord,(RecordMetadata recordMetadata,Exception err)->{
+                if(err == null){
+                    log.info("Message received. \n"+
+                            "topic ["+recordMetadata.topic() +"]\n"+
+                            "partition ["+recordMetadata.partition()+"]\n"+
+                            "offset ["+recordMetadata.offset()+"]\n"+
+                            "timestamp ["+recordMetadata.timestamp() +"]");
+                }else{
+                    log.error("An error occurred while producing messages", err);
+                }
+            });
+        }
         producer.close();
 
     }
