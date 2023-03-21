@@ -4,6 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 
 public class Producer {
@@ -22,6 +27,8 @@ public class Producer {
         ProducerRecord<String,String> producerRecord = new ProducerRecord<>("lotr_characters","hobbits","Bilbo");
 
         producer.send(producerRecord);
+
+        producer.close();
 
     }
 }
