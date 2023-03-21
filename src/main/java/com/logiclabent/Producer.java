@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
-import org.apache.
+
 
 public class Producer {
     private static final Logger log= LoggerFactory.getLogger(Producer.class);
@@ -19,6 +19,9 @@ public class Producer {
 
         KafkaProducer<String,String> producer = new KafkaProducer<>(properties);
 
+        ProducerRecord<String,String> producerRecord = new ProducerRecord<>("lotr_characters","hobbits","Bilbo");
+
+        producer.send(producerRecord);
 
     }
 }
